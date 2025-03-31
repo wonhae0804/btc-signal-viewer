@@ -1,0 +1,16 @@
+[
+  {
+    "strategy": "EMA 눌림목",
+    "symbol": "BTC",
+    "price": 34200000,
+    "rsi": 47.8,
+    "time": "2025-03-31 14:00"
+  },
+  {
+    "strategy": "VPVR 유사",
+    "symbol": "BTC",
+    "price": 34050000,
+    "rsi": 50.2,
+    "time": "2025-03-31 15:00"
+  }
+]
