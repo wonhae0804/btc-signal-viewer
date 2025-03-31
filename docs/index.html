@@ -4,41 +4,64 @@
   <meta charset="UTF-8" />
   <title>BTC Signal Viewer</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
-    h1 { text-align: center; }
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; text-align: center; }
+    h1 { margin-bottom: 10px; }
+    button {
+      background: #3498db; color: white; border: none; padding: 10px 20px;
+      border-radius: 5px; cursor: pointer; margin-bottom: 20px;
+    }
     .card {
       background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 15px; margin: 15px auto; max-width: 600px;
+      text-align: left;
     }
     .strategy { font-weight: bold; font-size: 18px; color: #2c3e50; }
     .time { color: gray; font-size: 14px; }
     .price { font-size: 16px; }
+    .no-signal { color: #999; font-size: 16px; margin-top: 30px; }
   </style>
 </head>
 <body>
   <h1>BTC 전략 시그널</h1>
-  <div id="signals">로딩 중...</div>
+  <button onclick="loadSignals()">🔄 시그널 새로고침</button>
+  <div id="signals">시그널 데이터를 불러오는 중...</div>
 
   <script>
-    fetch("signals.json?t=" + new Date().getTime())
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("signals");
-        container.innerHTML = ""; // 초기화
-        data.reverse().forEach(sig => {
-          const el = document.createElement("div");
-          el.className = "card";
-          el.innerHTML = `
-            <div class="strategy">${sig.strategy} 시그널</div>
-            <div class="time">${sig.time}</div>
-            <div class="price">📌 현재가: ${sig.price.toLocaleString()}원<br>📊 RSI: ${sig.rsi}</div>
-          `;
-          container.appendChild(el);
+    function loadSignals() {
+      const container = document.getElementById("signals");
+      container.innerHTML = "시그널 데이터를 불러오는 중...";
+
+      fetch("signals.json?t=" + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+          container.innerHTML = ""; // 초기화
+          if (data.length === 0) {
+            container.innerHTML = '<div class="no-signal">🚫 현재 조건에 맞는 시그널이 없습니다.</div>';
+            return;
+          }
+
+          data.reverse().forEach(sig => {
+            const el = document.createElement("div");
+            el.className = "card";
+            el.innerHTML = `
+              <div class="strategy">${sig.strategy} 시그널</div>
+              <div class="time">${sig.time}</div>
+              <div class="price">📌 현재가: ${sig.price.toLocaleString()}원<br>📊 RSI: ${sig.rsi}</div>
+            `;
+            container.appendChild(el);
+          });
+        })
+        .catch(err => {
+          container.innerHTML = '<div class="no-signal">❌ 시그널 데이터를 불러오지 못했습니다.</div>';
         });
-      })
-      .catch(err => {
-        document.getElementById("signals").innerText = "시그널 데이터를 불러오지 못했습니다.";
-      });
+    }
+
+    // 초기 로드 시 1번 실행
+    loadSignals();
+  </script>
+</body>
+</html>
+
   </script>
 </body>
 </html>
