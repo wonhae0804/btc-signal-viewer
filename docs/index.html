@@ -12,56 +12,77 @@
     }
     .card {
       background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px; margin: 15px auto; max-width: 600px;
-      text-align: left;
+      padding: 15px; margin: 15px auto; max-width: 600px; text-align: left;
     }
-    .strategy { font-weight: bold; font-size: 18px; color: #2c3e50; }
-    .time { color: gray; font-size: 14px; }
-    .price { font-size: 16px; }
-    .no-signal { color: #999; font-size: 16px; margin-top: 30px; }
+    .section-title { font-size: 20px; margin-top: 30px; font-weight: bold; color: #2c3e50; }
+    .no-signal { color: #999; font-size: 16px; margin-top: 10px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 8px 0; font-size: 15px; color: #333; }
   </style>
 </head>
 <body>
   <h1>BTC 전략 시그널</h1>
   <button onclick="loadSignals()">🔄 시그널 새로고침</button>
-  <div id="signals">시그널 데이터를 불러오는 중...</div>
+
+  <div class="section-title">📌 현재 전략 조건</div>
+  <div>
+    - EMA20 > EMA50<br>
+    - 이전봉이 EMA20 아래에서 닫히고, 현재봉이 EMA20 위에서 닫힘<br>
+    - RSI > 45
+  </div>
+
+  <div class="section-title">📡 실시간 시그널</div>
+  <div id="signals">시그널 로딩 중...</div>
+
+  <div class="section-title">🕓 최근 조건 만족 시점</div>
+  <ul id="history">로딩 중...</ul>
 
   <script>
     function loadSignals() {
-      const container = document.getElementById("signals");
-      container.innerHTML = "시그널 데이터를 불러오는 중...";
+      const sigEl = document.getElementById("signals");
+      const histEl = document.getElementById("history");
+      sigEl.innerHTML = "시그널 로딩 중...";
+      histEl.innerHTML = "로딩 중...";
 
       fetch("signals.json?t=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
-          container.innerHTML = ""; // 초기화
-          if (data.length === 0) {
-            container.innerHTML = '<div class="no-signal">🚫 현재 조건에 맞는 시그널이 없습니다.</div>';
-            return;
+          // 실시간
+          sigEl.innerHTML = "";
+          if (data.current.length === 0) {
+            sigEl.innerHTML = '<div class="no-signal">🚫 현재 조건에 맞는 시그널이 없습니다.</div>';
+          } else {
+            data.current.forEach(sig => {
+              const el = document.createElement("div");
+              el.className = "card";
+              el.innerHTML = `
+                <div><strong>${sig.strategy} 시그널</strong></div>
+                <div>${sig.time}</div>
+                <div>📌 현재가: ${sig.price.toLocaleString()}원<br>📊 RSI: ${sig.rsi}</div>
+              `;
+              sigEl.appendChild(el);
+            });
           }
 
-          data.reverse().forEach(sig => {
-            const el = document.createElement("div");
-            el.className = "card";
-            el.innerHTML = `
-              <div class="strategy">${sig.strategy} 시그널</div>
-              <div class="time">${sig.time}</div>
-              <div class="price">📌 현재가: ${sig.price.toLocaleString()}원<br>📊 RSI: ${sig.rsi}</div>
-            `;
-            container.appendChild(el);
-          });
+          // 히스토리
+          histEl.innerHTML = "";
+          if (data.history.length === 0) {
+            histEl.innerHTML = '<li>없음</li>';
+          } else {
+            data.history.forEach(sig => {
+              const li = document.createElement("li");
+              li.textContent = `${sig.time} - ₩${sig.price.toLocaleString()}`;
+              histEl.appendChild(li);
+            });
+          }
         })
         .catch(err => {
-          container.innerHTML = '<div class="no-signal">❌ 시그널 데이터를 불러오지 못했습니다.</div>';
+          sigEl.innerHTML = '<div class="no-signal">❌ 시그널 데이터를 불러오지 못했습니다.</div>';
+          histEl.innerHTML = '<li>불러오기 실패</li>';
         });
     }
 
-    // 초기 로드 시 1번 실행
     loadSignals();
-  </script>
-</body>
-</html>
-
   </script>
 </body>
 </html>
