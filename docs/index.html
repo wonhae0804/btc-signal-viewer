@@ -17,13 +17,14 @@
 </head>
 <body>
   <h1>BTC 전략 시그널</h1>
-  <div id="signals"></div>
+  <div id="signals">로딩 중...</div>
 
   <script>
-    fetch("signals.json")
+    fetch("signals.json?t=" + new Date().getTime())
       .then(response => response.json())
       .then(data => {
         const container = document.getElementById("signals");
+        container.innerHTML = ""; // 초기화
         data.reverse().forEach(sig => {
           const el = document.createElement("div");
           el.className = "card";
@@ -34,6 +35,9 @@
           `;
           container.appendChild(el);
         });
+      })
+      .catch(err => {
+        document.getElementById("signals").innerText = "시그널 데이터를 불러오지 못했습니다.";
       });
   </script>
 </body>
