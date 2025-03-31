@@ -47,8 +47,8 @@ if check_condition(df.iloc[-2], df.iloc[-1]):
 
 # History signals
 history = []
-for i in range(1, len(df)-1):
-    if check_condition(df.iloc[i-1], df.iloc[i]):
+for i in range(1, len(df) - 1):
+    if check_condition(df.iloc[i - 1], df.iloc[i]):
         history.append({
             "strategy": "EMA 눌림목",
             "symbol": "BTC",
@@ -66,9 +66,6 @@ signals = {
 }
 
 with open("docs/signals.json", "w", encoding="utf-8") as f:
-    json.dump(signals, f, ensure_ascii=False, indent=2)
-
-print(f"✅ 시그널 생성 완료: current {len(current)}개, history {len(history)}개")
     json.dump(signals, f, ensure_ascii=False, indent=2)
 
 print(f"✅ 시그널 생성 완료: current {len(current)}개, history {len(history)}개")
