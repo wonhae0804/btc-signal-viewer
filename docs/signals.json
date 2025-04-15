@@ -1,5 +1,13 @@
 {
-  "current": [],
+  "current": [
+    {
+      "strategy": "EMA 눌림목",
+      "symbol": "BTC",
+      "price": 122815000,
+      "rsi": 56.77,
+      "time": "2025-04-16 05:00"
+    }
+  ],
   "history": [
     {
       "strategy": "EMA 눌림목",
