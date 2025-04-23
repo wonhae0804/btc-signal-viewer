@@ -27,7 +27,7 @@ def check_condition(prev, current):
 
 # Check for current signals
 current = []
-if check_condition(df.iloc[-2], df.iloc[-1]):
+if True: 
     signal = {
         "strategy": "EMA 눌림목",
         "symbol": "BTC",
