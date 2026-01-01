@@ -3,12 +3,19 @@
     {
       "strategy": "EMA 눌림목",
       "symbol": "BTC",
-      "price": 128079000,
-      "rsi": 54.14,
-      "time": "2026-01-01 05:00"
+      "price": 128538000,
+      "rsi": 60.29,
+      "time": "2026-01-01 09:00"
     }
   ],
   "history": [
+    {
+      "strategy": "EMA 눌림목",
+      "symbol": "BTC",
+      "price": 137491000,
+      "rsi": 64.7,
+      "time": "2025-12-09 21:00"
+    },
     {
       "strategy": "EMA 눌림목",
       "symbol": "BTC",
